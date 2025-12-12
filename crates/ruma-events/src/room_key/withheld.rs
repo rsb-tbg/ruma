@@ -12,7 +12,11 @@ use ruma_macros::{EventContent, StringEnum};
 use serde::{Deserialize, Serialize, de};
 use serde_json::value::RawValue as RawJsonValue;
 
-use crate::PrivOwnedStr;
+use crate::{AppserviceToDeviceEvent, PrivOwnedStr};
+
+pub type AppserviceToDeviceRoomKeyWithheldEvent =
+    AppserviceToDeviceEvent<ToDeviceRoomKeyWithheldEventContent>;
+pub type AppserviceToDeviceRoomKeyWithheldEventContent = ToDeviceRoomKeyWithheldEventContent;
 
 /// The content of an [`m.room_key.withheld`] event.
 ///
@@ -75,6 +79,68 @@ impl<'de> Deserialize<'de> for ToDeviceRoomKeyWithheldEventContent {
         Ok(Self { algorithm, code, reason, sender_key })
     }
 }
+
+// /// The content of an [`m.room_key.withheld`] appservice event.
+// ///
+// /// Typically encrypted as an `m.room.encrypted` event, then sent as an appservice to-device
+// event. ///
+// /// [`m.room_key.withheld`]: https://spec.matrix.org/latest/client-server-api/#mroom_keywithheld
+// #[derive(Clone, Debug, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.room_key.withheld", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceRoomKeyWithheldEventContent {
+//     /// The encryption algorithm the key in this event is to be used with.
+//     ///
+//     /// Must be `m.megolm.v1.aes-sha2`.
+//     pub algorithm: EventEncryptionAlgorithm,
+
+//     /// A machine-readable code for why the megolm key was not sent.
+//     #[serde(flatten)]
+//     pub code: RoomKeyWithheldCodeInfo,
+
+//     /// A human-readable reason for why the key was not sent.
+//     ///
+//     /// The receiving client should only use this string if it does not understand the code.
+//     #[serde(skip_serializing_if = "Option::is_none")]
+//     pub reason: Option<String>,
+
+//     /// The unpadded base64-encoded device curve25519 key of the event's sender.
+//     pub sender_key: Base64,
+// }
+
+// impl AppserviceToDeviceRoomKeyWithheldEventContent {
+//     /// Creates a new `ToDeviceRoomKeyWithheldEventContent` with the given algorithm, code and
+//     /// sender key.
+//     pub fn new(
+//         algorithm: EventEncryptionAlgorithm,
+//         code: RoomKeyWithheldCodeInfo,
+//         sender_key: Base64,
+//     ) -> Self {
+//         Self { algorithm, code, reason: None, sender_key }
+//     }
+// }
+
+// impl<'de> Deserialize<'de> for AppserviceToDeviceRoomKeyWithheldEventContent {
+//     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+//     where
+//         D: de::Deserializer<'de>,
+//     {
+//         #[derive(Deserialize)]
+//         struct ToDeviceRoomKeyWithheldEventContentDeHelper {
+//             algorithm: EventEncryptionAlgorithm,
+//             reason: Option<String>,
+//             sender_key: Base64,
+//         }
+
+//         let json = Box::<RawJsonValue>::deserialize(deserializer)?;
+
+//         let ToDeviceRoomKeyWithheldEventContentDeHelper { algorithm, reason, sender_key } =
+//             from_raw_json_value(&json)?;
+//         let code = from_raw_json_value(&json)?;
+
+//         Ok(Self { algorithm, code, reason, sender_key })
+//     }
+// }
 
 /// The possible codes for why a megolm key was not sent, and the associated session data.
 #[derive(Debug, Clone, Serialize)]

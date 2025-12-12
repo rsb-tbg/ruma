@@ -6,7 +6,11 @@ use ruma_common::{OwnedDeviceId, OwnedTransactionId, serde::StringEnum};
 use ruma_macros::EventContent;
 use serde::{Deserialize, Serialize, ser::SerializeStruct};
 
-use crate::{GlobalAccountDataEventType, PrivOwnedStr};
+use crate::{AppserviceToDeviceEvent, GlobalAccountDataEventType, PrivOwnedStr};
+
+pub type AppserviceToDeviceSecretRequestEvent =
+    AppserviceToDeviceEvent<ToDeviceSecretRequestEventContent>;
+pub type AppserviceToDeviceSecretRequestEventContent = ToDeviceSecretRequestEventContent;
 
 /// The content of an `m.secret.request` event.
 ///
@@ -43,6 +47,42 @@ impl ToDeviceSecretRequestEventContent {
         Self { action, requesting_device_id, request_id }
     }
 }
+
+// /// The content of an `m.secret.request` appservice event.
+// ///
+// /// Event sent by a client to request a secret from another device or to cancel a previous
+// request. ///
+// /// It is sent as an unencrypted to-device event.
+// #[derive(Clone, Debug, Serialize, Deserialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.secret.request", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceSecretRequestEventContent {
+//     /// The action for the request.
+//     #[serde(flatten)]
+//     pub action: RequestAction,
+
+//     /// The ID of the device requesting the event.
+//     pub requesting_device_id: OwnedDeviceId,
+
+//     /// A random string uniquely identifying (with respect to the requester and the target) the
+//     /// target for a secret.
+//     ///
+//     /// If the secret is requested from multiple devices at the same time, the same ID may be
+// used     /// for every target. The same ID is also used in order to cancel a previous request.
+//     pub request_id: OwnedTransactionId,
+// }
+
+// impl AppserviceToDeviceSecretRequestEventContent {
+//     /// Creates a new `AppserviceToDeviceSecretRequestEventContent` with the given action,
+//     /// requesting device ID and request ID.
+//     pub fn new(
+//         action: RequestAction,
+//         requesting_device_id: OwnedDeviceId,
+//         request_id: OwnedTransactionId,
+//     ) -> Self {
+//         Self { action, requesting_device_id, request_id }
+//     }
+// }
 
 /// Action for an `m.secret.request` event.
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Deserialize)]

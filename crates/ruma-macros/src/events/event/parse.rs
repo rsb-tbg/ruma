@@ -87,6 +87,7 @@ fn event_ident_to_kind_and_variation(
         "RedactedStateEvent" => (EventKind::State, EventVariation::Redacted),
         "RedactedSyncStateEvent" => (EventKind::State, EventVariation::RedactedSync),
         "ToDeviceEvent" => (EventKind::ToDevice, EventVariation::None),
+        "AppserviceToDeviceEvent" => (EventKind::AppserviceToDevice, EventVariation::None),
         "HierarchySpaceChildEvent" => (EventKind::HierarchySpaceChild, EventVariation::Stripped),
         "OriginalRoomRedactionEvent" => (EventKind::RoomRedaction, EventVariation::None),
         "OriginalSyncRoomRedactionEvent" => {

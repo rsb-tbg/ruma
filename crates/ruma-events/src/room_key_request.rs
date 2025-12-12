@@ -8,7 +8,11 @@ use ruma_common::{
 use ruma_macros::EventContent;
 use serde::{Deserialize, Serialize};
 
-use crate::PrivOwnedStr;
+use crate::{AppserviceToDeviceEvent, PrivOwnedStr};
+
+pub type AppserviceToDeviceRoomKeyRequestEvent =
+    AppserviceToDeviceEvent<ToDeviceRoomKeyRequestEventContent>;
+pub type AppserviceToDeviceRoomKeyRequestEventContent = ToDeviceRoomKeyRequestEventContent;
 
 /// The content of an `m.room_key_request` event.
 #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
@@ -45,6 +49,42 @@ impl ToDeviceRoomKeyRequestEventContent {
         Self { action, body, requesting_device_id, request_id }
     }
 }
+
+// /// The content of an `m.room_key_request` appservice event.
+// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.room_key_request", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceRoomKeyRequestEventContent {
+//     /// Whether this is a new key request or a cancellation of a previous request.
+//     pub action: Action,
+
+//     /// Information about the requested key.
+//     ///
+//     /// Required if action is `request`.
+//     pub body: Option<RequestedKeyInfo>,
+
+//     /// ID of the device requesting the key.
+//     pub requesting_device_id: OwnedDeviceId,
+
+//     /// A random string uniquely identifying the request for a key.
+//     ///
+//     /// If the key is requested multiple times, it should be reused. It should also reused
+//     /// in order to cancel a request.
+//     pub request_id: OwnedTransactionId,
+// }
+
+// impl AppserviceToDeviceRoomKeyRequestEventContent {
+//     /// Creates a new `AppserviceToDeviceRoomKeyRequestEventContent` with the given action, body,
+//     /// device ID and request ID.
+//     pub fn new(
+//         action: Action,
+//         body: Option<RequestedKeyInfo>,
+//         requesting_device_id: OwnedDeviceId,
+//         request_id: OwnedTransactionId,
+//     ) -> Self {
+//         Self { action, body, requesting_device_id, request_id }
+//     }
+// }
 
 /// A new key request or a cancellation of a previous request.
 #[doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/src/doc/string_enum.md"))]

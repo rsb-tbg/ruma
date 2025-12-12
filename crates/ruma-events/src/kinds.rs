@@ -1,6 +1,7 @@
 use as_variant::as_variant;
 use ruma_common::{
-    EventId, MilliSecondsSinceUnixEpoch, OwnedEventId, OwnedRoomId, OwnedUserId, RoomId, UserId,
+    EventId, MilliSecondsSinceUnixEpoch, OwnedDeviceId, OwnedEventId, OwnedRoomId, OwnedUserId,
+    RoomId, UserId,
     encryption::DeviceKeys,
     room_version_rules::RedactionRules,
     serde::{JsonCastable, JsonObject, Raw, from_raw_json_value},
@@ -10,9 +11,9 @@ use serde::{Deserialize, Deserializer, Serialize, ser::SerializeStruct};
 use serde_json::value::RawValue as RawJsonValue;
 
 use super::{
-    AnyInitialStateEvent, EmptyStateKey, EphemeralRoomEventContent, EventContentFromType,
-    GlobalAccountDataEventContent, MessageLikeEventContent, MessageLikeEventType,
-    MessageLikeUnsigned, PossiblyRedactedStateEventContent, RedactContent,
+    AnyInitialStateEvent, AppserviceToDeviceEventContent, EmptyStateKey, EphemeralRoomEventContent,
+    EventContentFromType, GlobalAccountDataEventContent, MessageLikeEventContent,
+    MessageLikeEventType, MessageLikeUnsigned, PossiblyRedactedStateEventContent, RedactContent,
     RedactedMessageLikeEventContent, RedactedStateEventContent, RedactedUnsigned,
     RedactionDeHelper, RoomAccountDataEventContent, StateEventType, StaticStateEventContent,
     ToDeviceEventContent,
@@ -780,6 +781,53 @@ impl<C: ToDeviceEventContent> Serialize for ToDeviceEvent<C> {
 }
 
 impl<C: ToDeviceEventContent> JsonCastable<JsonObject> for ToDeviceEvent<C> {}
+
+/// An event sent using send-to-device messaging to an appservice.
+#[derive(Clone, Debug, Event)]
+#[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+pub struct AppserviceToDeviceEvent<C: AppserviceToDeviceEventContent> {
+    /// Data specific to the event type.
+    pub content: C,
+
+    /// The fully-qualified ID of the user who sent this event.
+    pub sender: OwnedUserId,
+
+    /// The fully-qualified ID of the intended recipient of this event.
+    pub to_user_id: OwnedUserId,
+
+    /// The device ID of the intended recipient of this event.
+    pub to_device_id: OwnedDeviceId,
+}
+
+impl<C: AppserviceToDeviceEventContent> AppserviceToDeviceEvent<C> {
+    /// Construct a new `AppserviceToDeviceEvent` with the given content, sender, recipient user ID,
+    /// and recipient device ID.
+    pub fn new(
+        sender: OwnedUserId,
+        content: C,
+        to_user_id: OwnedUserId,
+        to_device_id: OwnedDeviceId,
+    ) -> Self {
+        Self { content, sender, to_user_id, to_device_id }
+    }
+}
+
+impl<C: AppserviceToDeviceEventContent> Serialize for AppserviceToDeviceEvent<C> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut state = serializer.serialize_struct("AppserviceToDeviceEvent", 3)?;
+        state.serialize_field("type", &self.content.event_type())?;
+        state.serialize_field("content", &self.content)?;
+        state.serialize_field("sender", &self.sender)?;
+        state.serialize_field("to_user_id", &self.to_user_id)?;
+        state.serialize_field("to_device_id", &self.to_device_id)?;
+        state.end()
+    }
+}
+
+impl<C: AppserviceToDeviceEventContent> JsonCastable<JsonObject> for AppserviceToDeviceEvent<C> {}
 
 /// The decrypted payload of an `m.olm.v1.curve25519-aes-sha2` event.
 #[derive(Clone, Debug, Event)]

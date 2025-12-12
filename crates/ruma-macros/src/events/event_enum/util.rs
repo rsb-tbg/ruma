@@ -94,7 +94,8 @@ impl EventEnumKind {
             | Self::EphemeralRoom
             | Self::MessageLike
             | Self::State
-            | Self::ToDevice => &[],
+            | Self::ToDevice
+            | Self::AppserviceToDevice => &[],
         }
     }
 }
@@ -161,7 +162,8 @@ impl EventWithBounds {
             | EventEnumKind::EphemeralRoom
             | EventEnumKind::MessageLike
             | EventEnumKind::State
-            | EventEnumKind::ToDevice => (
+            | EventEnumKind::ToDevice
+            | EventEnumKind::AppserviceToDevice => (
                 quote! { #ruma_events::#ident<C> },
                 Some(quote! { <C: #ruma_events::#event_content_trait> }),
                 None,

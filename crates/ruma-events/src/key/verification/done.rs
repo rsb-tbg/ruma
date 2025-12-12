@@ -6,7 +6,12 @@ use ruma_common::OwnedTransactionId;
 use ruma_macros::EventContent;
 use serde::{Deserialize, Serialize};
 
-use crate::relation::Reference;
+use crate::{AppserviceToDeviceEvent, relation::Reference};
+
+pub type AppserviceToDeviceKeyVerificationDoneEvent =
+    AppserviceToDeviceEvent<ToDeviceKeyVerificationDoneEventContent>;
+pub type AppserviceToDeviceKeyVerificationDoneEventContent =
+    ToDeviceKeyVerificationDoneEventContent;
 
 /// The content of a to-device `m.m.key.verification.done` event.
 ///
@@ -27,6 +32,27 @@ impl ToDeviceKeyVerificationDoneEventContent {
         Self { transaction_id }
     }
 }
+
+// /// The content of a to-device `m.key.verification.done` appservice event.
+// ///
+// /// Event signaling that the interactive key verification has successfully concluded.
+// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.key.verification.done", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceKeyVerificationDoneEventContent {
+//     /// An opaque identifier for the verification process.
+//     ///
+//     /// Must be the same as the one used for the `m.key.verification.start` message.
+//     pub transaction_id: OwnedTransactionId,
+// }
+
+// impl AppserviceToDeviceKeyVerificationDoneEventContent {
+//     /// Creates a new `AppserviceToDeviceKeyVerificationDoneEventContent` with the given
+// transaction     /// ID.
+//     pub fn new(transaction_id: OwnedTransactionId) -> Self {
+//         Self { transaction_id }
+//     }
+// }
 
 /// The payload for a in-room `m.key.verification.done` event.
 ///

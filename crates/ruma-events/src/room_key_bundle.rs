@@ -6,7 +6,11 @@ use ruma_common::OwnedRoomId;
 use ruma_macros::EventContent;
 use serde::{Deserialize, Serialize};
 
-use crate::room::EncryptedFile;
+use crate::{AppserviceToDeviceEvent, room::EncryptedFile};
+
+pub type AppserviceToDeviceRoomKeyBundleEvent =
+    AppserviceToDeviceEvent<ToDeviceRoomKeyBundleEventContent>;
+pub type AppserviceToDeviceRoomKeyBundleEventContent = ToDeviceRoomKeyBundleEventContent;
 
 /// The content of an `m.room_key_bundle` event.
 ///
@@ -31,6 +35,30 @@ impl ToDeviceRoomKeyBundleEventContent {
         Self { room_id, file }
     }
 }
+
+// /// The content of an `m.room_key_bundle` appservice event.
+// ///
+// /// Typically encrypted as an `m.room.encrypted` event, then sent as an appservice to-device
+// event. ///
+// /// This event is defined in [MSC4268](https://github.com/matrix-org/matrix-spec-proposals/pull/4268)
+// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "io.element.msc4268.room_key_bundle", alias = "m.room_key_bundle", kind =
+// AppserviceToDevice)] pub struct AppserviceToDeviceRoomKeyBundleEventContent {
+//     /// The room that these keys are for.
+//     pub room_id: OwnedRoomId,
+
+//     /// The location and encryption info of the key bundle.
+//     pub file: EncryptedFile,
+// }
+
+// impl AppserviceToDeviceRoomKeyBundleEventContent {
+//     /// Creates a new `AppserviceToDeviceRoomKeyBundleEventContent` with the given room ID, and
+//     /// [`EncryptedFile`] which contains the room keys from the bundle.
+//     pub fn new(room_id: OwnedRoomId, file: EncryptedFile) -> Self {
+//         Self { room_id, file }
+//     }
+// }
 
 #[cfg(test)]
 mod tests {

@@ -6,7 +6,12 @@ use ruma_common::{OwnedTransactionId, serde::StringEnum};
 use ruma_macros::EventContent;
 use serde::{Deserialize, Serialize};
 
-use crate::{PrivOwnedStr, relation::Reference};
+use crate::{AppserviceToDeviceEvent, PrivOwnedStr, relation::Reference};
+
+pub type AppserviceToDeviceKeyVerificationCancelEvent =
+    AppserviceToDeviceEvent<ToDeviceKeyVerificationCancelEventContent>;
+pub type AppserviceToDeviceKeyVerificationCancelEventContent =
+    ToDeviceKeyVerificationCancelEventContent;
 
 /// The content of a to-device `m.key.verification.cancel` event.
 ///
@@ -34,6 +39,33 @@ impl ToDeviceKeyVerificationCancelEventContent {
         Self { transaction_id, reason, code }
     }
 }
+
+// /// The content of a to-device `m.key.verification.cancel` appservice event.
+// ///
+// /// Cancels a key verification process/request.
+// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.key.verification.cancel", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceKeyVerificationCancelEventContent {
+//     /// The opaque identifier for the verification process/request.
+//     pub transaction_id: OwnedTransactionId,
+
+//     /// A human readable description of the `code`.
+//     ///
+//     /// The client should only rely on this string if it does not understand the `code`.
+//     pub reason: String,
+
+//     /// The error code for why the process / request was cancelled by the user.
+//     pub code: CancelCode,
+// }
+
+// impl AppserviceToDeviceKeyVerificationCancelEventContent {
+//     /// Creates a new `AppserviceToDeviceKeyVerificationCancelEventContent` with the given
+//     /// transaction ID, reason and code.
+//     pub fn new(transaction_id: OwnedTransactionId, reason: String, code: CancelCode) -> Self {
+//         Self { transaction_id, reason, code }
+//     }
+// }
 
 /// The content of an in-room `m.key.verification.cancel` event.
 ///

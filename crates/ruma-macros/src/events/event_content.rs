@@ -649,6 +649,11 @@ enum EventContentKind {
     ///
     /// This is an event that is sent directly to another device.
     ToDevice,
+
+    /// An appservice to-device event.
+    ///
+    /// This is an event that is sent directly to an appservice device.
+    AppserviceToDevice,
 }
 
 impl EventContentKind {
@@ -664,6 +669,7 @@ impl EventContentKind {
             Self::MessageLike { .. } => CommonEventKind::MessageLike,
             Self::State { .. } => CommonEventKind::State,
             Self::ToDevice => CommonEventKind::ToDevice,
+            Self::AppserviceToDevice => CommonEventKind::AppserviceToDevice,
         })
     }
 

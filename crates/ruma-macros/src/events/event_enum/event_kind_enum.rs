@@ -374,6 +374,8 @@ impl EventEnumVariation<'_> {
         let state_key_accessor = self.expand_state_key_accessor();
         let relations_accessor = self.expand_relations_accessor();
         let transaction_id_accessor = self.expand_transaction_id_accessor();
+        let appservice_to_user_id_accessor = self.expand_appservice_to_user_id_accessor();
+        let appservice_to_device_id_accessor = self.expand_appservice_to_device_id_accessor();
 
         Ok(quote! {
             #[automatically_derived]
@@ -388,6 +390,8 @@ impl EventEnumVariation<'_> {
                 #relations_accessor
                 #state_key_accessor
                 #transaction_id_accessor
+                #appservice_to_user_id_accessor
+                #appservice_to_device_id_accessor
             }
         })
     }
@@ -659,6 +663,54 @@ impl EventEnumVariation<'_> {
                     Self::_Custom(event) => {
                         event.as_original().and_then(|ev| ev.unsigned.transaction_id.as_deref())
                     }
+                }
+            }
+        })
+    }
+
+    /// Generate accessor for the `to_user_id` field for this enum, if present.
+    fn expand_appservice_to_user_id_accessor(&self) -> Option<TokenStream> {
+        if self.kind != EventEnumKind::AppserviceToDevice {
+            return None;
+        }
+
+        let ruma_common = self.ruma_events.ruma_common();
+        let variants = &self.variants;
+        let variant_attrs = &self.variant_attrs;
+
+        Some(quote! {
+            /// Returns this event's `to_user_id` field.
+            pub fn to_user_id(&self) -> &#ruma_common::UserId {
+                match self {
+                    #(
+                        #( #variant_attrs )*
+                        Self::#variants(event) => &event.to_user_id,
+                    )*
+                    Self::_Custom(event) => &event.to_user_id,
+                }
+            }
+        })
+    }
+
+    /// Generate accessor for the `to_device_id` field for this enum, if present.
+    fn expand_appservice_to_device_id_accessor(&self) -> Option<TokenStream> {
+        if self.kind != EventEnumKind::AppserviceToDevice {
+            return None;
+        }
+
+        let ruma_common = self.ruma_events.ruma_common();
+        let variants = &self.variants;
+        let variant_attrs = &self.variant_attrs;
+
+        Some(quote! {
+            /// Returns this event's `to_device_id` field.
+            pub fn to_device_id(&self) -> &#ruma_common::DeviceId {
+                match self {
+                    #(
+                        #( #variant_attrs )*
+                        Self::#variants(event) => &event.to_device_id,
+                    )*
+                    Self::_Custom(event) => &event.to_device_id,
                 }
             }
         })

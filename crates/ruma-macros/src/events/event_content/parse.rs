@@ -567,6 +567,7 @@ impl EventContentKind {
                     }
                 }
                 CommonEventKind::ToDevice => EventContentKind::ToDevice,
+                CommonEventKind::AppserviceToDevice => EventContentKind::AppserviceToDevice,
             },
             EventContentKindAttr::BothAccountData => EventContentKind::BothAccountData,
         })

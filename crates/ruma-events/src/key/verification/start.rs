@@ -12,7 +12,12 @@ use serde_json::Value as JsonValue;
 use super::{
     HashAlgorithm, KeyAgreementProtocol, MessageAuthenticationCode, ShortAuthenticationString,
 };
-use crate::relation::Reference;
+use crate::{AppserviceToDeviceEvent, relation::Reference};
+
+pub type AppserviceToDeviceKeyVerificationStartEvent =
+    AppserviceToDeviceEvent<ToDeviceKeyVerificationStartEventContent>;
+pub type AppserviceToDeviceKeyVerificationStartEventContent =
+    ToDeviceKeyVerificationStartEventContent;
 
 /// The content of a to-device `m.key.verification.start` event.
 ///
@@ -47,6 +52,40 @@ impl ToDeviceKeyVerificationStartEventContent {
         Self { from_device, transaction_id, method }
     }
 }
+
+// /// The content of a to-device `m.key.verification.start` appservice event.
+// ///
+// /// Begins an SAS key verification process.
+// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.key.verification.start", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceKeyVerificationStartEventContent {
+//     /// The device ID which is initiating the process.
+//     pub from_device: OwnedDeviceId,
+
+//     /// An opaque identifier for the verification process.
+//     ///
+//     /// Must be unique with respect to the devices involved. Must be the same as the
+//     /// `transaction_id` given in the `m.key.verification.request` if this process is originating
+//     /// from a request.
+//     pub transaction_id: OwnedTransactionId,
+
+//     /// Method specific content.
+//     #[serde(flatten)]
+//     pub method: StartMethod,
+// }
+
+// impl AppserviceToDeviceKeyVerificationStartEventContent {
+//     /// Creates a new `AppserviceToDeviceKeyVerificationStartEventContent` with the given device
+// ID,     /// transaction ID and method specific content.
+//     pub fn new(
+//         from_device: OwnedDeviceId,
+//         transaction_id: OwnedTransactionId,
+//         method: StartMethod,
+//     ) -> Self {
+//         Self { from_device, transaction_id, method }
+//     }
+// }
 
 /// The content of an in-room `m.key.verification.start` event.
 ///

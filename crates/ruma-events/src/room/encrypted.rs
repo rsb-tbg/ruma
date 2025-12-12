@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 
 use super::message;
 use crate::{
+    AppserviceToDeviceEvent,
     relation::{Annotation, CustomRelation, InReplyTo, Reference, RelationType, Thread},
     room::message::RelationWithoutReplacement,
 };
@@ -18,6 +19,10 @@ use crate::{
 mod relation_serde;
 #[cfg(feature = "unstable-msc4362")]
 pub mod unstable_state;
+
+pub type AppserviceToDeviceRoomEncryptedEvent =
+    AppserviceToDeviceEvent<ToDeviceRoomEncryptedEventContent>;
+pub type AppserviceToDeviceRoomEncryptedEventContent = ToDeviceRoomEncryptedEventContent;
 
 /// The content of an `m.room.encrypted` event.
 #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
@@ -68,6 +73,29 @@ impl From<EncryptedEventScheme> for ToDeviceRoomEncryptedEventContent {
         Self { scheme }
     }
 }
+
+// /// The to-device content of an `m.room.encrypted` appservice event.
+// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
+// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+// #[ruma_event(type = "m.room.encrypted", kind = AppserviceToDevice)]
+// pub struct AppserviceToDeviceRoomEncryptedEventContent {
+//     /// Algorithm-specific fields.
+//     #[serde(flatten)]
+//     pub scheme: EncryptedEventScheme,
+// }
+
+// impl AppserviceToDeviceRoomEncryptedEventContent {
+//     /// Creates a new `AppserviceToDeviceRoomEncryptedEventContent` with the given scheme.
+//     pub fn new(scheme: EncryptedEventScheme) -> Self {
+//         Self { scheme }
+//     }
+// }
+
+// impl From<EncryptedEventScheme> for AppserviceToDeviceRoomEncryptedEventContent {
+//     fn from(scheme: EncryptedEventScheme) -> Self {
+//         Self { scheme }
+//     }
+// }
 
 /// The encryption scheme for `RoomEncryptedEventContent`.
 #[derive(Clone, Debug, Deserialize, Serialize)]

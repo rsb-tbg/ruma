@@ -138,6 +138,11 @@ enum EventEnumKind {
     ///
     /// This is an event that is sent directly to another device.
     ToDevice,
+
+    /// An appservice to-device event.
+    ///
+    /// This is an event that is sent directly to an appservice device.
+    AppserviceToDevice,
 }
 
 impl EventEnumKind {
@@ -157,6 +162,7 @@ impl EventEnumKind {
             Self::MessageLike => CommonEventKind::MessageLike,
             Self::State => CommonEventKind::State,
             Self::ToDevice => CommonEventKind::ToDevice,
+            Self::AppserviceToDevice => CommonEventKind::AppserviceToDevice,
             Self::Timeline => return None,
         })
     }
@@ -189,9 +195,10 @@ impl EventEnumKind {
     /// Get the list of variations for an event enum for this kind.
     fn event_enum_variations(self) -> &'static [EventVariation] {
         match self {
-            Self::GlobalAccountData | Self::RoomAccountData | Self::ToDevice => {
-                &[EventVariation::None]
-            }
+            Self::GlobalAccountData
+            | Self::RoomAccountData
+            | Self::ToDevice
+            | Self::AppserviceToDevice => &[EventVariation::None],
             Self::EphemeralRoom => &[EventVariation::Sync],
             Self::MessageLike | Self::Timeline => &[EventVariation::None, EventVariation::Sync],
             Self::State => &[
@@ -226,8 +233,10 @@ impl EventEnumKind {
                     )
             }
             CommonEventField::Sender => {
-                matches!(self, Self::MessageLike | Self::State | Self::ToDevice)
-                    && var != EventVariation::Initial
+                matches!(
+                    self,
+                    Self::MessageLike | Self::State | Self::ToDevice | Self::AppserviceToDevice
+                ) && var != EventVariation::Initial
             }
         }
     }
@@ -242,6 +251,7 @@ impl From<CommonEventKind> for EventEnumKind {
             CommonEventKind::MessageLike => Self::MessageLike,
             CommonEventKind::State => Self::State,
             CommonEventKind::ToDevice => Self::ToDevice,
+            CommonEventKind::AppserviceToDevice => Self::AppserviceToDevice,
         }
     }
 }
@@ -286,6 +296,7 @@ impl EventEnumEntry {
     fn to_event_path(&self, kind: EventEnumKind, var: EventVariation) -> syn::Path {
         let type_prefix = match kind {
             EventEnumKind::ToDevice => "ToDevice",
+            EventEnumKind::AppserviceToDevice => "AppserviceToDevice",
             // Special case event types that represent both account data kinds.
             EventEnumKind::GlobalAccountData if self.both_account_data => "Global",
             EventEnumKind::RoomAccountData if self.both_account_data => "Room",
@@ -313,6 +324,7 @@ impl EventEnumEntry {
     fn to_event_content_path(&self, kind: EventEnumKind) -> syn::Path {
         let type_prefix = match kind {
             EventEnumKind::ToDevice => "ToDevice",
+            EventEnumKind::AppserviceToDevice => "AppserviceToDevice",
             // Special case encrypted state event for MSC4362.
             EventEnumKind::State
                 if self

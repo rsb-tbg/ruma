@@ -5,8 +5,8 @@ use serde::{Serialize, de::DeserializeOwned};
 use serde_json::{from_str as from_json_str, value::RawValue as RawJsonValue};
 
 use super::{
-    EphemeralRoomEventType, GlobalAccountDataEventType, MessageLikeEventType,
-    RoomAccountDataEventType, StateEventType, ToDeviceEventType,
+    AppserviceToDeviceEventType, EphemeralRoomEventType, GlobalAccountDataEventType,
+    MessageLikeEventType, RoomAccountDataEventType, StateEventType, ToDeviceEventType,
 };
 
 /// Extension trait for [`Raw<T>`].
@@ -146,6 +146,24 @@ pub trait PossiblyRedactedStateEventContent: Sized + Serialize {
 pub trait ToDeviceEventContent: Sized + Serialize {
     /// Get the event's type, like `m.room_key`.
     fn event_type(&self) -> ToDeviceEventType;
+}
+
+/// Content of an appservice to-device event.
+pub trait AppserviceToDeviceEventContent: Sized + Serialize {
+    /// Get the event's type, like `m.room_key`.
+    fn event_type(&self) -> AppserviceToDeviceEventType;
+}
+
+impl<T> AppserviceToDeviceEventContent for T
+where
+    T: ToDeviceEventContent,
+{
+    fn event_type(&self) -> AppserviceToDeviceEventType {
+        // Convert ToDeviceEventType to AppserviceToDeviceEventType
+        // They represent the same event types, just in different contexts
+        let event_type_str = ToDeviceEventContent::event_type(self).to_string();
+        event_type_str.into()
+    }
 }
 
 /// Event content that can be deserialized with its event type.

@@ -40,15 +40,21 @@ pub(super) enum CommonEventKind {
     ///
     /// This is an event that is sent directly to another device.
     ToDevice,
+
+    /// An appservice to-device event.
+    ////
+    /// This is an event that is sent directly to an appservice device.
+    AppserviceToDevice,
 }
 
 impl CommonEventKind {
     /// Get the list of variations for an event type (struct or enum) for this kind.
     pub(super) fn event_variations(self) -> &'static [EventVariation] {
         match self {
-            Self::GlobalAccountData | Self::RoomAccountData | Self::ToDevice => {
-                &[EventVariation::None]
-            }
+            Self::GlobalAccountData
+            | Self::RoomAccountData
+            | Self::ToDevice
+            | Self::AppserviceToDevice => &[EventVariation::None],
             Self::EphemeralRoom => &[EventVariation::None, EventVariation::Sync],
             Self::MessageLike => &[
                 EventVariation::None,
@@ -81,6 +87,7 @@ impl fmt::Display for CommonEventKind {
             Self::MessageLike => write!(f, "MessageLikeEvent"),
             Self::State => write!(f, "StateEvent"),
             Self::ToDevice => write!(f, "ToDeviceEvent"),
+            Self::AppserviceToDevice => write!(f, "AppserviceToDeviceEvent"),
         }
     }
 }
@@ -95,12 +102,13 @@ impl Parse for CommonEventKind {
             "MessageLike" => Self::MessageLike,
             "State" => Self::State,
             "ToDevice" => Self::ToDevice,
+            "AppserviceToDevice" => Self::AppserviceToDevice,
             id => {
                 return Err(syn::Error::new_spanned(
                     ident,
                     format!(
                         "valid event kinds are GlobalAccountData, RoomAccountData, EphemeralRoom, \
-                         MessageLike, State, ToDevice; found `{id}`",
+                         MessageLike, State, ToDevice, AppserviceToDevice; found `{id}`",
                     ),
                 ));
             }
