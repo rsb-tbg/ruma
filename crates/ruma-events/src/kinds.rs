@@ -782,6 +782,15 @@ impl<C: ToDeviceEventContent> Serialize for ToDeviceEvent<C> {
 
 impl<C: ToDeviceEventContent> JsonCastable<JsonObject> for ToDeviceEvent<C> {}
 
+impl<C> From<AppserviceToDeviceEvent<C>> for ToDeviceEvent<C>
+where
+    C: AppserviceToDeviceEventContent + ToDeviceEventContent,
+{
+    fn from(event: AppserviceToDeviceEvent<C>) -> Self {
+        Self { content: event.content, sender: event.sender }
+    }
+}
+
 /// An event sent using send-to-device messaging with additional fields when pushed to an
 /// appservice.
 #[derive(Clone, Debug, Event)]

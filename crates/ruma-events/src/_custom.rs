@@ -3,13 +3,12 @@ use serde::Serialize;
 use serde_json::value::RawValue as RawJsonValue;
 
 use super::{
-    AppserviceToDeviceEventContent, AppserviceToDeviceEventType, EphemeralRoomEventContent,
-    EphemeralRoomEventType, EventContentFromType, GlobalAccountDataEventContent,
-    GlobalAccountDataEventType, MessageLikeEventContent, MessageLikeEventType, MessageLikeUnsigned,
-    PossiblyRedactedStateEventContent, RedactContent, RedactedMessageLikeEventContent,
-    RedactedStateEventContent, RoomAccountDataEventContent, RoomAccountDataEventType,
-    StateEventContent, StateEventType, StaticStateEventContent, ToDeviceEventContent,
-    ToDeviceEventType,
+    EphemeralRoomEventContent, EphemeralRoomEventType, EventContentFromType,
+    GlobalAccountDataEventContent, GlobalAccountDataEventType, MessageLikeEventContent,
+    MessageLikeEventType, MessageLikeUnsigned, PossiblyRedactedStateEventContent, RedactContent,
+    RedactedMessageLikeEventContent, RedactedStateEventContent, RoomAccountDataEventContent,
+    RoomAccountDataEventType, StateEventContent, StateEventType, StaticStateEventContent,
+    ToDeviceEventContent, ToDeviceEventType,
 };
 
 macro_rules! custom_event_content {
@@ -116,9 +115,4 @@ impl ToDeviceEventContent for CustomToDeviceEventContent {
     }
 }
 
-custom_event_content!(CustomAppserviceToDeviceEventContent, AppserviceToDeviceEventType);
-impl AppserviceToDeviceEventContent for CustomAppserviceToDeviceEventContent {
-    fn event_type(&self) -> AppserviceToDeviceEventType {
-        self.event_type[..].into()
-    }
-}
+pub type CustomAppserviceToDeviceEventContent = CustomToDeviceEventContent;

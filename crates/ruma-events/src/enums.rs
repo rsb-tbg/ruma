@@ -513,3 +513,41 @@ impl AnyMessageLikeEventContent {
         }
     }
 }
+
+impl From<AnyAppserviceToDeviceEvent> for AnyToDeviceEvent {
+    fn from(event: AnyAppserviceToDeviceEvent) -> Self {
+        match event {
+            AnyAppserviceToDeviceEvent::Dummy(e) => Self::Dummy(e.into()),
+            AnyAppserviceToDeviceEvent::RoomKey(e) => Self::RoomKey(e.into()),
+            #[cfg(feature = "unstable-msc4268")]
+            AnyAppserviceToDeviceEvent::RoomKeyBundle(e) => Self::RoomKeyBundle(e.into()),
+            AnyAppserviceToDeviceEvent::RoomKeyRequest(e) => Self::RoomKeyRequest(e.into()),
+            AnyAppserviceToDeviceEvent::RoomKeyWithheld(e) => Self::RoomKeyWithheld(e.into()),
+            AnyAppserviceToDeviceEvent::ForwardedRoomKey(e) => Self::ForwardedRoomKey(e.into()),
+            AnyAppserviceToDeviceEvent::KeyVerificationRequest(e) => {
+                Self::KeyVerificationRequest(e.into())
+            }
+            AnyAppserviceToDeviceEvent::KeyVerificationReady(e) => {
+                Self::KeyVerificationReady(e.into())
+            }
+            AnyAppserviceToDeviceEvent::KeyVerificationStart(e) => {
+                Self::KeyVerificationStart(e.into())
+            }
+            AnyAppserviceToDeviceEvent::KeyVerificationCancel(e) => {
+                Self::KeyVerificationCancel(e.into())
+            }
+            AnyAppserviceToDeviceEvent::KeyVerificationAccept(e) => {
+                Self::KeyVerificationAccept(e.into())
+            }
+            AnyAppserviceToDeviceEvent::KeyVerificationKey(e) => Self::KeyVerificationKey(e.into()),
+            AnyAppserviceToDeviceEvent::KeyVerificationMac(e) => Self::KeyVerificationMac(e.into()),
+            AnyAppserviceToDeviceEvent::KeyVerificationDone(e) => {
+                Self::KeyVerificationDone(e.into())
+            }
+            AnyAppserviceToDeviceEvent::RoomEncrypted(e) => Self::RoomEncrypted(e.into()),
+            AnyAppserviceToDeviceEvent::SecretRequest(e) => Self::SecretRequest(e.into()),
+            AnyAppserviceToDeviceEvent::SecretSend(e) => Self::SecretSend(e.into()),
+            AnyAppserviceToDeviceEvent::_Custom(e) => Self::_Custom(e.into()),
+        }
+    }
+}
