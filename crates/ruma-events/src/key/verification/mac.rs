@@ -10,8 +10,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::{AppserviceToDeviceEvent, relation::Reference};
 
+/// A to-device `m.key.verification.mac` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationMacEvent =
     AppserviceToDeviceEvent<ToDeviceKeyVerificationMacEventContent>;
+
+/// The content of a to-device `m.key.verification.mac` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationMacEventContent = ToDeviceKeyVerificationMacEventContent;
 
 /// The content of a to-device `m.key.verification.` event.
@@ -47,40 +50,6 @@ impl ToDeviceKeyVerificationMacEventContent {
         Self { transaction_id, mac, keys }
     }
 }
-
-// /// The content of a to-device `m.key.verification.mac` appservice event.
-// ///
-// /// Sends the MAC of a device's key to the partner device.
-// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
-// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
-// #[ruma_event(type = "m.key.verification.mac", kind = AppserviceToDevice)]
-// pub struct AppserviceToDeviceKeyVerificationMacEventContent {
-//     /// An opaque identifier for the verification process.
-//     ///
-//     /// Must be the same as the one used for the `m.key.verification.start` message.
-//     pub transaction_id: OwnedTransactionId,
-
-//     /// A map of the key ID to the MAC of the key, using the algorithm in the verification
-// process.     ///
-//     /// The MAC is encoded as unpadded base64.
-//     pub mac: BTreeMap<String, Base64>,
-
-//     /// The MAC of the comma-separated, sorted, list of key IDs given in the `mac` property,
-//     /// encoded as unpadded base64.
-//     pub keys: Base64,
-// }
-
-// impl AppserviceToDeviceKeyVerificationMacEventContent {
-//     /// Creates a new `AppserviceToDeviceKeyVerificationMacEventContent` with the given
-// transaction     /// ID, key ID to MAC map and key MAC.
-//     pub fn new(
-//         transaction_id: OwnedTransactionId,
-//         mac: BTreeMap<String, Base64>,
-//         keys: Base64,
-//     ) -> Self {
-//         Self { transaction_id, mac, keys }
-//     }
-// }
 
 /// The content of an in-room `m.key.verification.` event.
 ///

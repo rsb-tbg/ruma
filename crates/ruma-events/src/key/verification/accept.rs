@@ -14,8 +14,11 @@ use super::{
 };
 use crate::{AppserviceToDeviceEvent, relation::Reference};
 
+/// A to-device `m.key.verification.accept` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationAcceptEvent =
     AppserviceToDeviceEvent<ToDeviceKeyVerificationAcceptEventContent>;
+
+/// The content of a to-device `m.key.verification.accept` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationAcceptEventContent =
     ToDeviceKeyVerificationAcceptEventContent;
 
@@ -43,31 +46,6 @@ impl ToDeviceKeyVerificationAcceptEventContent {
         Self { transaction_id, method }
     }
 }
-
-// /// The content of a to-device `m.key.verification.accept` appservice event.
-// ///
-// /// Accepts a previously sent `m.key.verification.start` message.
-// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
-// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
-// #[ruma_event(type = "m.key.verification.accept", kind = AppserviceToDevice)]
-// pub struct AppserviceToDeviceKeyVerificationAcceptEventContent {
-//     /// An opaque identifier for the verification process.
-//     ///
-//     /// Must be the same as the one used for the `m.key.verification.start` message.
-//     pub transaction_id: OwnedTransactionId,
-
-//     /// The method specific content.
-//     #[serde(flatten)]
-//     pub method: AcceptMethod,
-// }
-
-// impl AppserviceToDeviceKeyVerificationAcceptEventContent {
-//     /// Creates a new `AppserviceToDeviceKeyVerificationAcceptEventContent` with the given
-//     /// transaction ID and method-specific content.
-//     pub fn new(transaction_id: OwnedTransactionId, method: AcceptMethod) -> Self {
-//         Self { transaction_id, method }
-//     }
-// }
 
 /// The content of a in-room `m.key.verification.accept` event.
 ///

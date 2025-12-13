@@ -782,7 +782,8 @@ impl<C: ToDeviceEventContent> Serialize for ToDeviceEvent<C> {
 
 impl<C: ToDeviceEventContent> JsonCastable<JsonObject> for ToDeviceEvent<C> {}
 
-/// An event sent using send-to-device messaging to an appservice.
+/// An event sent using send-to-device messaging with additional fields when pushed to an
+/// appservice.
 #[derive(Clone, Debug, Event)]
 #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
 pub struct AppserviceToDeviceEvent<C: AppserviceToDeviceEventContent> {

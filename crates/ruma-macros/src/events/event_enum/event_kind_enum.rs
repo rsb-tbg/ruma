@@ -708,9 +708,9 @@ impl EventEnumVariation<'_> {
                 match self {
                     #(
                         #( #variant_attrs )*
-                        Self::#variants(event) => &event.to_device_id,
+                        Self::#variants(event) => ::std::ops::Deref::deref(&event.to_device_id),
                     )*
-                    Self::_Custom(event) => &event.to_device_id,
+                    Self::_Custom(event) => ::std::ops::Deref::deref(&event.to_device_id),
                 }
             }
         })

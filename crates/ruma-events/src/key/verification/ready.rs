@@ -9,8 +9,11 @@ use serde::{Deserialize, Serialize};
 use super::VerificationMethod;
 use crate::{AppserviceToDeviceEvent, relation::Reference};
 
+/// A to-device `m.key.verification.ready` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationReadyEvent =
     AppserviceToDeviceEvent<ToDeviceKeyVerificationReadyEventContent>;
+
+/// The content of a to-device `m.key.verification.ready` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationReadyEventContent =
     ToDeviceKeyVerificationReadyEventContent;
 
@@ -46,39 +49,6 @@ impl ToDeviceKeyVerificationReadyEventContent {
         Self { from_device, methods, transaction_id }
     }
 }
-
-// /// The content of a to-device `m.key.verification.ready` appservice event.
-// ///
-// /// Response to a previously sent `m.key.verification.request` message.
-// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
-// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
-// #[ruma_event(type = "m.key.verification.ready", kind = AppserviceToDevice)]
-// pub struct AppserviceToDeviceKeyVerificationReadyEventContent {
-//     /// The device ID which is initiating the request.
-//     pub from_device: OwnedDeviceId,
-
-//     /// The verification methods supported by the sender.
-//     pub methods: Vec<VerificationMethod>,
-
-//     /// An opaque identifier for the verification process.
-//     ///
-//     /// Must be unique with respect to the devices involved. Must be the same as the
-//     /// `transaction_id` given in the `m.key.verification.request` from a
-//     /// request.
-//     pub transaction_id: OwnedTransactionId,
-// }
-
-// impl AppserviceToDeviceKeyVerificationReadyEventContent {
-//     /// Creates a new `AppserviceToDeviceKeyVerificationReadyEventContent` with the given device
-// ID,     /// verification methods and transaction ID.
-//     pub fn new(
-//         from_device: OwnedDeviceId,
-//         methods: Vec<VerificationMethod>,
-//         transaction_id: OwnedTransactionId,
-//     ) -> Self {
-//         Self { from_device, methods, transaction_id }
-//     }
-// }
 
 /// The content of an in-room `m.m.key.verification.ready` event.
 ///

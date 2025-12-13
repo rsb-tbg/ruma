@@ -8,8 +8,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::{AppserviceToDeviceEvent, relation::Reference};
 
+/// A to-device `m.key.verification.key` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationKeyEvent =
     AppserviceToDeviceEvent<ToDeviceKeyVerificationKeyEventContent>;
+
+/// The content of a to-device `m.key.verification.key` event when pushed to an appservice.
 pub type AppserviceToDeviceKeyVerificationKeyEventContent = ToDeviceKeyVerificationKeyEventContent;
 
 /// The content of a to-device `m.key.verification.key` event.
@@ -35,30 +38,6 @@ impl ToDeviceKeyVerificationKeyEventContent {
         Self { transaction_id, key }
     }
 }
-
-// /// The content of a to-device `m.key.verification.key` appservice event.
-// ///
-// /// Sends the ephemeral public key for a device to the partner device.
-// #[derive(Clone, Debug, Deserialize, Serialize, EventContent)]
-// #[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
-// #[ruma_event(type = "m.key.verification.key", kind = AppserviceToDevice)]
-// pub struct AppserviceToDeviceKeyVerificationKeyEventContent {
-//     /// An opaque identifier for the verification process.
-//     ///
-//     /// Must be the same as the one used for the `m.key.verification.start` message.
-//     pub transaction_id: OwnedTransactionId,
-
-//     /// The device's ephemeral public key, encoded as unpadded base64.
-//     pub key: Base64,
-// }
-
-// impl AppserviceToDeviceKeyVerificationKeyEventContent {
-//     /// Creates a new `AppserviceToDeviceKeyVerificationKeyEventContent` with the given
-// transaction     /// ID and key.
-//     pub fn new(transaction_id: OwnedTransactionId, key: Base64) -> Self {
-//         Self { transaction_id, key }
-//     }
-// }
 
 /// The content of an in-room `m.key.verification.key` event.
 ///
