@@ -1,4 +1,4 @@
-error: valid event kinds are GlobalAccountData, RoomAccountData, EphemeralRoom, MessageLike, State, ToDevice; found `NotReal`
+error: valid event kinds are GlobalAccountData, RoomAccountData, EphemeralRoom, MessageLike, State, ToDevice, AppserviceToDevice; found `NotReal`
  --> tests/it/ui/09-enum-invalid-kind.rs:4:10
   |
 4 |     enum NotReal {
